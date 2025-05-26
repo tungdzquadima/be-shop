@@ -64,34 +64,31 @@ public class OrderService implements IOrderService{
 
     @Override
     public Order updateOrder(long id, OrderDTO orderDTO) throws DataNotFoundException {
-        Order existingOrder = orderRepository.findById(id)
+        Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("Order not found with ID = " + id));
-
+        User existingUser = userRepository.findById(orderDTO.getUserId())
+                .orElseThrow(() -> new DataNotFoundException("cannot find userID = " + orderDTO.getUserId()));
         // Cập nhật thông tin từ orderDTO vào order
-        existingOrder.setAddress(orderDTO.getAddress());
-        existingOrder.setEmail(orderDTO.getEmail());
-        existingOrder.setFullname(orderDTO.getFullName());
-        existingOrder.setNote(orderDTO.getNote());
-        existingOrder.setPhoneNumber(orderDTO.getPhoneNumber());
-        existingOrder.setShippingAddress(orderDTO.getShippingAddress());
-        existingOrder.setShippingMethod(orderDTO.getShippingMethod());
-        existingOrder.setShippingDate(orderDTO.getShippingDate());
-        existingOrder.setPaymentMethod(orderDTO.getPaymentMethod());
-        existingOrder.setTotalMoney(orderDTO.getTotalMoney());
-        existingOrder.setActive(true);
-
+        modelMapper.typeMap(OrderDTO.class, Order.class).addMappings(mapper -> {
+            mapper.skip(Order::setId);
+        });
+        modelMapper.map(orderDTO,order);
+        order.setUser(existingUser);
         // Trạng thái đơn có thể cập nhật nếu cần
         //existingOrder.setStatus(o);
-
         // Lưu lại
-        return orderRepository.save(existingOrder);
+        return orderRepository.save(order);
     }
 
 
     @Override
-    public void deleteOrder(long id) {
-
+    public void deleteOrder(long id) throws DataNotFoundException {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Order not found with ID = " + id));
+        order.setActive(false); // đây là xóa mềm
+        orderRepository.save(order);
     }
+
 
     @Override
     public List<Order> getOrderFindByUser(long userId) {
