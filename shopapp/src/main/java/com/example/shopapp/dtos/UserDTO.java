@@ -24,6 +24,7 @@ public class UserDTO {
     @NotBlank(message = "password cannot be blank")
     private String password;
 
+    @NotBlank(message = "retype password cannot be blank")
     @JsonProperty("retype_password")
     private String retypePassword;// mật khẩu nhập lại
 

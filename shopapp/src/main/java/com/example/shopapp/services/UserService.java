@@ -36,7 +36,7 @@ public class UserService implements IUserService{
 //        Role role=roleRepository.findById(userDTO.getRoleId()).orElseThrow(()->new
 //                DataNotFoundException("role not found")));
         Role role = roleRepository.findById(userDTO.getRoleId())
-                .orElseThrow(() -> new DataNotFoundException("Role not found with id = " ));
+                .orElseThrow(() -> new DataNotFoundException("Role not found with id = " + userDTO.getRoleId()));
         newUser.setRole(role);
 
         // kiểm tra nếu có accountId thì ko cần password

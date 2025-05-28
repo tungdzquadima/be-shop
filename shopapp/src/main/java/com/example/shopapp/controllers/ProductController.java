@@ -187,20 +187,20 @@ public class ProductController {
 
 
 
-    // hàm này thêm nhiều sản phẩm cùng lúc để
-//    @PostMapping("/themnhieusanpham")
-//    public ResponseEntity<?> insertAllProducts(@RequestBody List<ProductDTO> productDTOList) {
-//        try {
-//            List<Product> createdProducts = new ArrayList<>();
-//            for (ProductDTO dto : productDTOList) {
-//                Product product = productService.createProduct(dto);
-//                createdProducts.add(product);
-//            }
-//            return ResponseEntity.ok(createdProducts);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
+     //hàm này thêm nhiều sản phẩm cùng lúc để
+    @PostMapping("/themnhieusanpham")
+    public ResponseEntity<?> insertAllProducts(@RequestBody List<ProductDTO> productDTOList) {
+        try {
+            List<Product> createdProducts = new ArrayList<>();
+            for (ProductDTO dto : productDTOList) {
+                Product product = productService.createProduct(dto);
+                createdProducts.add(product);
+            }
+            return ResponseEntity.ok(createdProducts);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 
     // tạo bản ghi fake test chức năng

@@ -58,4 +58,5 @@ public class CategoryController {
         categoryService.deleteCategory(id);
         return ResponseEntity.ok("delete category successfully with id: "+id);
     }
+
 }
