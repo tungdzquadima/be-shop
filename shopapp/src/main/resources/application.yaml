@@ -21,4 +21,7 @@ spring:
 
 api:
   prefix: api/v1
+jwt:
+  expiration: 2592000 #30 ngày=30*24*60*60 = 2592000
+  secretKey: I have a dream
 
