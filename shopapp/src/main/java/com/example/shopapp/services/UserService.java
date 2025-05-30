@@ -61,7 +61,7 @@ public class UserService implements IUserService{
 
         // đăng nhập
     @Override
-    public String login(String phoneNumber, String password) throws DataNotFoundException {
+    public String login(String phoneNumber, String password) throws Exception {
         //Liên quan đến security => khó
         Optional<User>optionalUser= userRepository.findByPhoneNumber(phoneNumber);
         if (optionalUser.isEmpty()){
@@ -72,10 +72,13 @@ public class UserService implements IUserService{
         // check pass
         if(existingUser.getFacebookAccountId() == 0 && existingUser.getGoogleAccountId()==0){
             if(!passwordEncoder.matches(password,existingUser.getPassword())){
-                throw new BadCredentialsException("wrong phoneNumber or password")
+                throw new BadCredentialsException("wrong phoneNumber or password");
             }
         }
-        UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(phoneNumber,password);
+        UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(
+                phoneNumber,password,
+                existingUser.getAuthorities()
+                );
         // authenticate with java swing
         authenticationManager.authenticate(authenticationToken);
         return jwtTokenUntil.generateToken(existingUser);// muốn trả về token JWT
