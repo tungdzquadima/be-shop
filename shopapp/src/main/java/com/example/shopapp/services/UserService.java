@@ -3,6 +3,7 @@ package com.example.shopapp.services;
 import com.example.shopapp.components.JwtTokenUntil;
 import com.example.shopapp.dtos.UserDTO;
 import com.example.shopapp.exceptions.DataNotFoundException;
+import com.example.shopapp.exceptions.PermissionDenyException;
 import com.example.shopapp.models.Role;
 import com.example.shopapp.models.User;
 import com.example.shopapp.repositories.RoleRepository;
@@ -26,11 +27,16 @@ public class UserService implements IUserService{
     private final JwtTokenUntil jwtTokenUntil;
     private final AuthenticationManager authenticationManager;
     @Override
-    public User createUser(UserDTO userDTO)  throws DataNotFoundException{
+    public User createUser(UserDTO userDTO) throws Exception {
         String phoneNumber=userDTO.getPhoneNumber();
         //Kiểm tra số điện thoại tồn tại hay chưa
         if(userRepository.existsByPhoneNumber(phoneNumber)){
-            throw  new DataIntegrityViolationException("phone number already exists");
+            throw  new DataIntegrityViolationException("số điện thoại đã tồn tại");
+        }
+        Role role = roleRepository.findById(userDTO.getRoleId())
+                .orElseThrow(() -> new DataNotFoundException("Role not found with id = " + userDTO.getRoleId()));
+        if(role.getName().toUpperCase().equals(Role.ADMIN)){
+            throw new PermissionDenyException("bạn không thể đăng ký tài khoản admin");
         }
         //convert userDTO -> user
         User newUser=User.builder()
@@ -44,8 +50,7 @@ public class UserService implements IUserService{
                 .build();
 //        Role role=roleRepository.findById(userDTO.getRoleId()).orElseThrow(()->new
 //                DataNotFoundException("role not found")));
-        Role role = roleRepository.findById(userDTO.getRoleId())
-                .orElseThrow(() -> new DataNotFoundException("Role not found with id = " + userDTO.getRoleId()));
+
         newUser.setRole(role);
 
         // kiểm tra nếu có accountId thì ko cần password

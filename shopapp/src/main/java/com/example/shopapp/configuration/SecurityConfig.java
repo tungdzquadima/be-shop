@@ -50,4 +50,19 @@ public class SecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
+    // chatgpt
+//    @Bean
+//    public SecurityFilterChain securityFilterChainChatgpt(HttpSecurity http) throws Exception {
+//        http
+//                .securityMatcher("/api/**") // chỉ áp dụng filter chain này cho các path bắt đầu bằng /api/
+//                .cors(cors -> {})
+//                .csrf(csrf -> csrf.disable())
+//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .authorizeHttpRequests(auth -> auth
+//                        .anyRequest().authenticated()
+//                );
+//        return http.build();
+//    }
+
+
 }
