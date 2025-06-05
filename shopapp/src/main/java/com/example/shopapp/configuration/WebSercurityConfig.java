@@ -23,42 +23,6 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class WebSercurityConfig {
     private final JwtTokenFilter jwtTokenFilter;
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .securityMatcher("/**") // áp dụng cho tất cả các đường dẫn còn lại (ngoài /api/**)
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
-//                .authorizeHttpRequests(request -> {
-//                    request.requestMatchers(
-//                                    "/api/v1/users/register",
-//                                    "/api/v1/users/login"
-//                            )
-//                            .permitAll()
-//                            .requestMatchers(HttpMethod.POST, "/api/v1/orders/**").hasAnyRole(Role.USER)
-//                            .requestMatchers(HttpMethod.DELETE, "/api/v1/orders/**").hasRole(Role.ADMIN)
-//                            .requestMatchers(HttpMethod.PUT, "/api/v1/orders/**").hasRole(Role.ADMIN)
-//                            .requestMatchers(HttpMethod.GET, "/api/v1/orders/**").hasAnyRole(Role.USER, Role.ADMIN)
-//
-//                            .requestMatchers(HttpMethod.GET, "/api/v1/categories/**").hasAnyRole(Role.USER, Role.ADMIN)
-//                            .requestMatchers(HttpMethod.POST, "/api/v1/categories/**").hasAnyRole(Role.ADMIN)
-//                            .requestMatchers(HttpMethod.PUT, "/api/v1/categories/**").hasAnyRole(Role.ADMIN)
-//                            .requestMatchers(HttpMethod.DELETE, "/api/v1/categories/**").hasAnyRole(Role.ADMIN)
-//
-//                            .requestMatchers(HttpMethod.GET, "/api/v1/products/**").hasAnyRole(Role.USER, Role.ADMIN)
-//                            .requestMatchers(HttpMethod.POST, "/api/v1/products/**").hasAnyRole(Role.ADMIN)
-//                            .requestMatchers(HttpMethod.PUT, "/api/v1/products/**").hasAnyRole(Role.ADMIN)
-//                            .requestMatchers(HttpMethod.DELETE, "/api/v1/products/**").hasAnyRole(Role.ADMIN)
-//
-//                            .requestMatchers(HttpMethod.GET, "/api/v1/order_details/**").hasAnyRole(Role.USER, Role.ADMIN)
-//                            .requestMatchers(HttpMethod.POST, "/api/v1/order_details/**").hasAnyRole(Role.ADMIN)
-//                            .requestMatchers(HttpMethod.PUT, "/api/v1/order_details/**").hasAnyRole(Role.ADMIN)
-//                            .requestMatchers(HttpMethod.DELETE, "/api/v1/order_details/**").hasAnyRole(Role.ADMIN)
-//                            .anyRequest().authenticated();
-//                });
-//        return http.build();
-//    }
-
 
     // chatgpt
     @Bean
@@ -71,15 +35,18 @@ public class WebSercurityConfig {
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         // Mở cho mọi người truy cập (không cần xác thực)
-                        .requestMatchers("/api/v1/users/register", "/api/v1/users/login").permitAll()
+                        .requestMatchers("/api/v1/users/register", "/api/v1/users/login","/api/v1/products").permitAll()
 
                         // Phân quyền chi tiết theo role
                         .requestMatchers(HttpMethod.POST, "/api/v1/orders/**").hasAnyRole(Role.USER)
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/orders/**").hasRole(Role.ADMIN)
                         .requestMatchers(HttpMethod.PUT, "/api/v1/orders/**").hasRole(Role.ADMIN)
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/**").hasAnyRole(Role.USER, Role.ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/v1/orders").hasRole(Role.ADMIN)
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/orders/{id}/status").hasRole(Role.ADMIN)// update trạng thái đơn
 
                         .requestMatchers(HttpMethod.GET, "/api/v1/categories/**").hasAnyRole(Role.USER, Role.ADMIN)
+                        .requestMatchers(HttpMethod.GET, "/api/v1/categories").hasAnyRole(Role.USER, Role.ADMIN)
                         .requestMatchers(HttpMethod.POST, "/api/v1/categories/**").hasRole(Role.ADMIN)
                         .requestMatchers(HttpMethod.PUT, "/api/v1/categories/**").hasRole(Role.ADMIN)
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/categories/**").hasRole(Role.ADMIN)
@@ -107,7 +74,7 @@ public class WebSercurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // frontend origin
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);  // nếu dùng cookie hoặc JWT qua cookie
 

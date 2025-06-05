@@ -35,22 +35,20 @@ public class CategoryController {
         return ResponseEntity.ok("Insert category successfully" );
     }
 
-    // hiển thị tất cả các categories
-    @GetMapping("") // /?page=1&limit=10
+    // hiển thị tất cả các categories// /?page=1&limit=10
+    @GetMapping("/getAll")
     public ResponseEntity<List<Category>> getAllCategories(
-            @RequestParam("page") int page,// nếu thiếu 1 tham số là fail
-            @RequestParam("limit") int limit
     ){
         List<Category> categories= categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
     }
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateAllCategories(@PathVariable long id,@Valid @RequestBody CategoryDTO categoryDTO){
-        categoryService.updateCategory(id,categoryDTO);
-        return ResponseEntity.ok("Update category successfully");
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<String> updateAllCategories(@PathVariable long id,@Valid @RequestBody CategoryDTO categoryDTO){
+//        categoryService.updateCategory(id,categoryDTO);
+//        return ResponseEntity.ok("Update category successfully");
+//    }
 
 
     @DeleteMapping("/{id}")

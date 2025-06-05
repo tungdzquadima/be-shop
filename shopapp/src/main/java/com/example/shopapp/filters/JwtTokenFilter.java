@@ -68,21 +68,24 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             //filterChain.doFilter(request,response); // enable bypass: ai cũng cho đi qua
 
     }
-    private  boolean isBypassToken(@NotNull HttpServletRequest request){
-        final List<Pair<String, String>> bypassTokens= Arrays.asList(
-                Pair.of("/api/v1/products","GET"),
-                Pair.of("/api/v1/categories","GET"),
-                Pair.of("/api/v1/users/register","POST"),
-                Pair.of("/api/v1/users/login","POST")
-
+    private boolean isBypassToken(@NotNull HttpServletRequest request) {
+        final List<Pair<String, String>> bypassTokens = Arrays.asList(
+                Pair.of("/api/v1/products", "GET"),
+                Pair.of("/api/v1/categories", "GET"),
+                Pair.of("/api/v1/users/register", "POST"),
+                Pair.of("/api/v1/users/login", "POST")
         );
-        for(Pair<String, String > bypassToken: bypassTokens){
-            if (request.getServletPath().contains(bypassToken.getLeft())// getFirst
-                    && request.getMethod().equals(bypassToken.getRight())){//getSecond
+
+        String path = request.getServletPath();
+        String method = request.getMethod();
+
+        for (Pair<String, String> bypassToken : bypassTokens) {
+            if (path.equals(bypassToken.getLeft()) && method.equals(bypassToken.getRight())) {
                 return true;
             }
         }
         return false;
     }
+
 
 }

@@ -32,6 +32,7 @@ public class JwtTokenUntil {
         Map<String, Object> claims = new HashMap<>();
         //this.generateSecretKey();
         claims.put("phoneNumber", user.getPhoneNumber());
+        claims.put("role_id", user.getRole().getId());// thêm role vào token
         try{
             String token = Jwts.builder()
                     .setClaims(claims)

@@ -88,10 +88,32 @@ public class OrderService implements IOrderService{
         order.setActive(false); // đây là xóa mềm
         orderRepository.save(order);
     }
+    @Override
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
 
 
     @Override
     public List<Order> getOrderFindByUser(long userId) {
         return orderRepository.findByUserId(userId);
+    }
+
+    // chatgpt cập nhất trạng thái
+    @Override
+    public Order updateOrderStatus(long id, String status) throws DataNotFoundException{
+        // Tìm đơn hàng theo id
+        Optional<Order> orderOptional = orderRepository.findById(id);
+        if (orderOptional.isEmpty()) {
+            throw new DataNotFoundException("Không tìm thấy đơn hàng với ID: " + id);
+        }
+
+        Order order = orderOptional.get();
+
+        // Cập nhật trạng thái
+        order.setStatus(status);
+
+        // Lưu lại đơn hàng đã cập nhật
+        return orderRepository.save(order);
     }
 }

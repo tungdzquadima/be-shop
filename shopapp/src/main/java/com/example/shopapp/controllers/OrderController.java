@@ -15,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -82,6 +83,41 @@ public class OrderController {
             return ResponseEntity.ok("Order deleted successfully id= " + id);
         } catch (DataNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
+
+    //lấy ra tất cả các order
+    // Lấy tất cả các đơn hàng (chức năng của admin)
+    @GetMapping("")
+    public ResponseEntity<?> getAllOrders() {
+        try {
+            List<Order> orders = orderService.getAllOrders();
+            return ResponseEntity.ok(orders);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
+
+    // chatgpt:
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<?> updateOrderStatus(
+            @PathVariable long id,
+            @RequestBody Map<String, String> payload) {  // Sử dụng Map để nhận dữ liệu từ body
+        try {
+            String status = payload.get("status");  // Lấy giá trị của status từ Map
+            System.out.println(status);
+            // Kiểm tra trạng thái hợp lệ
+            List<String> validStatuses = List.of("pending", "processing", "shipped", "delivered", "cancelled");
+            if (!validStatuses.contains(status)) {
+                return ResponseEntity.badRequest().body("Trạng thái không hợp lệ");
+            }
+
+            // Cập nhật trạng thái đơn hàng
+            Order updatedOrder = orderService.updateOrderStatus(id, status);
+            return ResponseEntity.ok(updatedOrder); // Trả về đơn hàng sau khi cập nhật
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error updating order status: " + e.getMessage());
         }
     }
 
