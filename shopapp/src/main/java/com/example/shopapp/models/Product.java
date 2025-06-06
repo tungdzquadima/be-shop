@@ -37,6 +37,11 @@ public class Product extends BaseEntity{
     @JoinColumn(name = "category_id")
     private Category category;
 
+
+    @ManyToOne
+    @JoinColumn(name = "brand_id", referencedColumnName = "id")
+    private Brand brand;
+
     // mới thêm do chatgpt chỉ
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore // hoặc dùng @JsonManagedReference nếu bạn dùng @JsonBackReference bên kia
