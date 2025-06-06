@@ -2,6 +2,7 @@ package com.example.shopapp.services;
 
 import com.example.shopapp.components.JwtTokenUntil;
 import com.example.shopapp.dtos.UserDTO;
+import com.example.shopapp.dtos.UserInfoDTO;
 import com.example.shopapp.exceptions.DataNotFoundException;
 import com.example.shopapp.exceptions.PermissionDenyException;
 import com.example.shopapp.models.Role;
@@ -88,4 +89,22 @@ public class UserService implements IUserService{
         authenticationManager.authenticate(authenticationToken);
         return jwtTokenUntil.generateToken(existingUser);// muốn trả về token JWT
     }
+
+    @Override
+    public UserInfoDTO getUserInfoByPhoneNumber(String phoneNumber) {
+        // Tìm người dùng theo số điện thoại, trả về Optional<User>
+        Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
+
+        // Kiểm tra nếu người dùng không tồn tại, ném lỗi
+        User user = userOptional.orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Trả về thông tin người dùng chỉ với các trường cần thiết
+        return new UserInfoDTO(
+                user.getFullName(),
+                user.getPhoneNumber(),
+                user.getAddress(),
+                user.getDateOfBirth()
+        );
+    }
+
 }

@@ -37,6 +37,7 @@ public class WebSercurityConfig {
                         // Mở cho mọi người truy cập (không cần xác thực)
                         .requestMatchers("/api/v1/users/register", "/api/v1/users/login","/api/v1/products").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/me").hasAnyRole(Role.ADMIN,Role.USER)
                         // Phân quyền chi tiết theo role
                         .requestMatchers(HttpMethod.POST, "/api/v1/orders/**").hasAnyRole(Role.USER)
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/orders/**").hasRole(Role.ADMIN)
