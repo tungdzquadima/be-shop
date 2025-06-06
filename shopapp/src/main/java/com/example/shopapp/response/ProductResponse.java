@@ -1,6 +1,8 @@
 package com.example.shopapp.response;
 
 import com.example.shopapp.models.BaseEntity;
+import com.example.shopapp.models.Brand;
+import com.example.shopapp.models.Category;
 import com.example.shopapp.models.Product;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
@@ -21,10 +23,10 @@ public class ProductResponse extends BaseResponse {
     private String description;
 
     @JsonProperty("category_id")
-    private long categoryId;
+    private Category category;
 
     @JsonProperty("brand_id")
-    private long brand;
+    private Brand brand;
 
     public  static ProductResponse fromProduct(Product product){
         ProductResponse productResponse=ProductResponse.builder()
@@ -33,8 +35,8 @@ public class ProductResponse extends BaseResponse {
                 .price(product.getPrice())
                 .thumbnail(product.getThumbnail())
                 .description(product.getDescription())
-                .categoryId(product.getCategory().getId())
-                .brand(product.getBrand().getId())
+                .category(product.getCategory())
+                .brand(product.getBrand())
                 .build();
         productResponse.setCreatedAt(product.getCreatedAt());
         productResponse.setUpdatedAt(product.getUpdatedAt());

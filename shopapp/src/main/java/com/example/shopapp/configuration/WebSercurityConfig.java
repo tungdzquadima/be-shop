@@ -58,9 +58,9 @@ public class WebSercurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/products/**").hasRole(Role.ADMIN)
 
                         .requestMatchers(HttpMethod.GET, "/api/v1/order_details/**").hasAnyRole(Role.USER, Role.ADMIN)
-                        .requestMatchers(HttpMethod.POST, "/api/v1/order_details/**").hasRole(Role.ADMIN)
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/order_details/**").hasRole(Role.ADMIN)
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/order_details/**").hasRole(Role.ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/api/v1/order_details/**").hasAnyRole(Role.USER, Role.ADMIN)
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/order_details/**").hasAnyRole(Role.USER, Role.ADMIN)
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/order_details/**").hasAnyRole(Role.USER, Role.ADMIN)
 
 
                         // Thêm quyền truy cập cho Brand
