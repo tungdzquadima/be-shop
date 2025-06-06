@@ -83,4 +83,8 @@ public class OrderDetailService implements IOrderDetailService{
     public List<OrderDetail> findByOrderId(long orderId) {
         return orderDetailRepository.findByOrderId(orderId);
     }
+    // Lấy tất cả OrderDetail
+    public List<OrderDetail> getAllOrderDetails() {
+        return orderDetailRepository.findAll();
+    }
 }

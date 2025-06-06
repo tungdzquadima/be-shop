@@ -55,4 +55,9 @@ public class OrderDetailContrller {
         orderDetailService.deleteOrderDetail(id);
         return ResponseEntity.ok().body("delete successfully");
     }
+    @GetMapping("/all")
+    public ResponseEntity<List<OrderDetail>> getAllOrderDetails() {
+        List<OrderDetail> orderDetails = orderDetailService.getAllOrderDetails();
+        return ResponseEntity.ok(orderDetails);
+    }
 }
