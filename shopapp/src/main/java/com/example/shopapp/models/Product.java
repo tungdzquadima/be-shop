@@ -47,5 +47,4 @@ public class Product extends BaseEntity{
     @JsonIgnore // hoặc dùng @JsonManagedReference nếu bạn dùng @JsonBackReference bên kia
     private List<ProductImage> images;
 
-
 }
