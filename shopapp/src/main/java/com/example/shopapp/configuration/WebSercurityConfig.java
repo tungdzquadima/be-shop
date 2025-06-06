@@ -62,6 +62,12 @@ public class WebSercurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/v1/order_details/**").hasRole(Role.ADMIN)
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/order_details/**").hasRole(Role.ADMIN)
 
+
+                        // Thêm quyền truy cập cho Brand
+                        .requestMatchers(HttpMethod.GET, "/api/v1/brands").hasAnyRole(Role.USER, Role.ADMIN)
+                        .requestMatchers(HttpMethod.POST, "/api/v1/brands").hasRole(Role.ADMIN)
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/brands/**").hasRole(Role.ADMIN)
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/brands/**").hasRole(Role.ADMIN)
                         // Các đường dẫn còn lại bắt buộc phải xác thực
                         .anyRequest().authenticated()
                 );
