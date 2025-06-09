@@ -34,8 +34,10 @@ public class Product extends BaseEntity{
 
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
+
+
 
 
     @ManyToOne

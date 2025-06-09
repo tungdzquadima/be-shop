@@ -19,5 +19,5 @@ public interface IProductService {
     void deleteProduct(long id);
     boolean existsByName(String name);
     ProductImage createProductImage(Long productId, ProductImageDTO productImageDTO) throws DataNotFoundException, InvalidParamExeption;
-    //
+    Page<ProductResponse> getProductsByCategory(Long categoryId , PageRequest pageRequest);
 }

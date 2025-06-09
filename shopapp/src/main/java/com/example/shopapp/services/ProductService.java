@@ -47,7 +47,7 @@ public class ProductService implements IProductService {
                 .thumbnail(productDTO.getThumbnail())
                 .description(productDTO.getDescription())
                 .category(existingCategory)
-                .brand(existingBrand)  // Thiết lập thương hiệu cho sản phẩm
+                .brand(existingBrand)
                 .build();
 
         return productRepository.save(newProduct);
@@ -122,4 +122,29 @@ public class ProductService implements IProductService {
 
         return productImageReponsitory.save(newProductImage);
     }
+
+    //tìm sản phẩm theo category
+    @Override
+    public Page<ProductResponse> getProductsByCategory(Long categoryId, PageRequest pageRequest) {
+        // Log thêm để xác minh số lượng sản phẩm
+        System.out.println("Fetching products for categoryId: " + categoryId);
+
+        // Gọi repository để lấy sản phẩm theo categoryId
+        Page<Product> products = productRepository.findByCategoryId(categoryId, pageRequest);
+
+        // Log số lượng sản phẩm tìm thấy
+        System.out.println("Number of products found: " + products.getTotalElements());
+
+        // Chuyển từ Product sang ProductResponse
+        return products.map(ProductResponse::fromProduct);
+    }
+
+
+
+
+
+
+
+
+
 }

@@ -28,19 +28,23 @@ public class ProductResponse extends BaseResponse {
     @JsonProperty("brand_id")
     private Brand brand;
 
-    public  static ProductResponse fromProduct(Product product){
-        ProductResponse productResponse=ProductResponse.builder()
+    public static ProductResponse fromProduct(Product product) {
+        System.out.println("Mapping product: " + product.getName());  // Log thêm tên sản phẩm
+
+        ProductResponse productResponse = ProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .price(product.getPrice())
                 .thumbnail(product.getThumbnail())
                 .description(product.getDescription())
-                .category(product.getCategory())
-                .brand(product.getBrand())
+                .category(product.getCategory())  // Kiểm tra xem Category có được ánh xạ đúng không
+                .brand(product.getBrand())        // Kiểm tra xem Brand có được ánh xạ đúng không
                 .build();
+
         productResponse.setCreatedAt(product.getCreatedAt());
         productResponse.setUpdatedAt(product.getUpdatedAt());
         return productResponse;
     }
+
 }
 

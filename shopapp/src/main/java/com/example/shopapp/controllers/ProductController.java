@@ -202,6 +202,30 @@ public class ProductController {
         }
     }
 
+    // tìm sản phẩm theo category
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<ProductListResponse> getProductsByCategory(
+            @RequestParam("page") int page,
+            @RequestParam("limit") int limit,
+            @PathVariable("categoryId") Long categoryId) {
+
+        PageRequest pageRequest = PageRequest.of(page, limit);
+        Page<ProductResponse> productPage = productService.getProductsByCategory(categoryId, pageRequest);
+        System.out.println("productPage: "+productPage);
+        int totalPages = productPage.getTotalPages();
+        List<ProductResponse> products = productPage.getContent();
+        System.out.println(categoryId);
+        System.out.println(products);
+        return ResponseEntity.ok(ProductListResponse.builder()
+                .products(products)
+                .totalPages(totalPages)
+                .build());
+    }
+
+
+
+
+
 
     // tạo bản ghi fake test chức năng
 //    @PostMapping("/fakeProducts")
