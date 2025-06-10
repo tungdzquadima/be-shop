@@ -100,10 +100,11 @@ public class UserService implements IUserService{
 
         // Trả về thông tin người dùng chỉ với các trường cần thiết
         return new UserInfoDTO(
-                user.getFullName(),
-                user.getPhoneNumber(),
-                user.getAddress(),
-                user.getDateOfBirth()
+                user.getId(),               // ID người dùng
+                user.getFullName(),         // Full name
+                user.getPhoneNumber(),      // Phone number
+                user.getAddress(),          // Address
+                user.getDateOfBirth()       // Date of birth
         );
     }
 
