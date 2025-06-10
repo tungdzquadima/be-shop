@@ -16,10 +16,14 @@ import com.example.shopapp.response.ProductResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -137,6 +141,20 @@ public class ProductService implements IProductService {
 
         // Chuyển từ Product sang ProductResponse
         return products.map(ProductResponse::fromProduct);
+    }
+
+// tìm kiếm sản phaamr
+
+    @Override
+    public Page<ProductResponse> searchProductsByName(String keyword, Pageable pageable) {
+        Page<Product> productPage = productRepository.searchByKeyword(keyword, pageable);
+        List<ProductResponse> productResponses = productPage
+                .getContent()
+                .stream()
+                .map(ProductResponse::fromProduct)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(productResponses, pageable, productPage.getTotalElements());
     }
 
 
