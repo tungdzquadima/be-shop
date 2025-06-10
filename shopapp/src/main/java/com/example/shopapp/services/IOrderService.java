@@ -11,9 +11,11 @@ import java.util.Optional;
 public interface IOrderService {
     OrderResponse createOrder(OrderDTO orderDTO) throws Exception;
     Optional<Order> getOrder(long id) throws DataNotFoundException;
-    Order updateOrder(long id, OrderDTO orderDTO) throws DataNotFoundException;
+    //Order updateOrder(long id, OrderDTO orderDTO) throws DataNotFoundException;
     void deleteOrder(long id) throws DataNotFoundException;
     List<Order> getOrderFindByUser(long userId);
     List<Order> getAllOrders();
-    Order updateOrderStatus(long id, String status) throws DataNotFoundException;
+    //Order updateOrderStatus(long id, String status) throws DataNotFoundException;
+    Order updateOrderStatus(long orderId, String status) throws Exception;
+
 }

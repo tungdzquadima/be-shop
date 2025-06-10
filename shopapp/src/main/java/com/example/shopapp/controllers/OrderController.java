@@ -63,17 +63,19 @@ public class OrderController {
     }
 
 
-    // việc của admin
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateOrder(@Valid @PathVariable long id,
-                                         @Valid @RequestBody OrderDTO orderDTO) {
+    // update status
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<?> cancelOrder(@PathVariable Long id) {
         try {
-            Order updatedOrder = orderService.updateOrder(id, orderDTO);
-            return ResponseEntity.ok(updatedOrder); // hoặc map sang OrderResponse nếu cần
+            Order cancelledOrder = orderService.updateOrderStatus(id, "cancelled");
+            return ResponseEntity.ok(cancelledOrder);
+        } catch (DataNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error updating order: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Lỗi khi hủy đơn hàng: " + e.getMessage());
         }
     }
+
 
 
     @DeleteMapping("/{id}")

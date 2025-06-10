@@ -60,25 +60,28 @@ public class OrderService implements IOrderService{
     }
 
 
+
+
     // phần này tự làm
 
     @Override
-    public Order updateOrder(long id, OrderDTO orderDTO) throws DataNotFoundException {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException("Order not found with ID = " + id));
-        User existingUser = userRepository.findById(orderDTO.getUserId())
-                .orElseThrow(() -> new DataNotFoundException("cannot find userID = " + orderDTO.getUserId()));
-        // Cập nhật thông tin từ orderDTO vào order
-        modelMapper.typeMap(OrderDTO.class, Order.class).addMappings(mapper -> {
-            mapper.skip(Order::setId);
-        });
-        modelMapper.map(orderDTO,order);
-        order.setUser(existingUser);
-        // Trạng thái đơn có thể cập nhật nếu cần
-        //existingOrder.setStatus(o);
-        // Lưu lại
+    public Order updateOrderStatus(long orderId, String status) throws Exception {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        if (optionalOrder.isEmpty()) {
+            throw new DataNotFoundException("Không tìm thấy đơn hàng với id: " + orderId);
+        }
+
+        Order order = optionalOrder.get();
+        order.setStatus(status);
+
+        // Nếu huỷ thì cũng đánh dấu là không active nữa
+        if ("cancelled".equalsIgnoreCase(status)) {
+            order.setActive(false);
+        }
+
         return orderRepository.save(order);
     }
+
 
 
     @Override
@@ -100,20 +103,5 @@ public class OrderService implements IOrderService{
     }
 
     // chatgpt cập nhất trạng thái
-    @Override
-    public Order updateOrderStatus(long id, String status) throws DataNotFoundException{
-        // Tìm đơn hàng theo id
-        Optional<Order> orderOptional = orderRepository.findById(id);
-        if (orderOptional.isEmpty()) {
-            throw new DataNotFoundException("Không tìm thấy đơn hàng với ID: " + id);
-        }
 
-        Order order = orderOptional.get();
-
-        // Cập nhật trạng thái
-        order.setStatus(status);
-
-        // Lưu lại đơn hàng đã cập nhật
-        return orderRepository.save(order);
-    }
 }

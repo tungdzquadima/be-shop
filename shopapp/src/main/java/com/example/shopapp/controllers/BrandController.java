@@ -41,7 +41,6 @@ public class BrandController {
         List<Brand> brands = brandService.getAllBrands();
         return new ResponseEntity<>(brands, HttpStatus.OK);
     }
-
     // Lấy thương hiệu theo ID
     @GetMapping("/{id}")
     public ResponseEntity<Brand> getBrandById(@PathVariable Long id) {

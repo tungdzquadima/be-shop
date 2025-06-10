@@ -41,7 +41,7 @@ public class WebSercurityConfig {
                         // Phân quyền chi tiết theo role
                         .requestMatchers(HttpMethod.POST, "/api/v1/orders/**").hasAnyRole(Role.USER,Role.ADMIN)
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/orders/**").hasRole(Role.ADMIN)
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/orders/**").hasRole(Role.ADMIN)
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/orders/**").hasAnyRole(Role.USER, Role.ADMIN)
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/**").hasAnyRole(Role.USER, Role.ADMIN)
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders").hasRole(Role.ADMIN)
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/orders/{id}/status").hasRole(Role.ADMIN)// update trạng thái đơn
