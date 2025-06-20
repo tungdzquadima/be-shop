@@ -34,20 +34,25 @@ public class WebSercurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // API không giữ session
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        // Mở cho mọi người truy cập (không cần xác thực)
-                        .requestMatchers("/api/v1/users/register", "/api/v1/users/login","/api/v1/products").permitAll()
+                        // Cho phép truy cập không cần đăng nhập (anonymous)
+                        .requestMatchers(
+                                "/api/v1/users/register",
+                                "/api/v1/users/login",
+                                "/api/v1/products/category/**",
+                                "/api/v1/products/{id}",     // lưu ý: sẽ match nếu dùng đúng định dạng trong controller
+                                "/api/v1/categories/getAll"
+                        ).permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/api/v1/users/me").hasAnyRole(Role.ADMIN,Role.USER)
-                        // Phân quyền chi tiết theo role
-                        .requestMatchers(HttpMethod.POST, "/api/v1/orders/**").hasAnyRole(Role.USER,Role.ADMIN)
+                        // Các route yêu cầu xác thực và phân quyền
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/me").hasAnyRole(Role.ADMIN, Role.USER)
+                        .requestMatchers(HttpMethod.POST, "/api/v1/orders/**").hasAnyRole(Role.USER, Role.ADMIN)
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/orders/**").hasRole(Role.ADMIN)
                         .requestMatchers(HttpMethod.PUT, "/api/v1/orders/**").hasRole(Role.ADMIN)
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/**").hasAnyRole(Role.USER, Role.ADMIN)
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders").hasRole(Role.ADMIN)
-                        .requestMatchers(HttpMethod.PATCH, "/api/v1/orders/{id}/status").hasRole(Role.ADMIN)// update trạng thái đơn
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/orders/{id}/status").hasRole(Role.ADMIN)
 
                         .requestMatchers(HttpMethod.GET, "/api/v1/categories/**").hasAnyRole(Role.USER, Role.ADMIN)
-                        .requestMatchers(HttpMethod.GET, "/api/v1/categories").hasAnyRole(Role.USER, Role.ADMIN)
                         .requestMatchers(HttpMethod.POST, "/api/v1/categories/**").hasRole(Role.ADMIN)
                         .requestMatchers(HttpMethod.PUT, "/api/v1/categories/**").hasRole(Role.ADMIN)
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/categories/**").hasRole(Role.ADMIN)
@@ -62,15 +67,15 @@ public class WebSercurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/v1/order_details/**").hasAnyRole(Role.USER, Role.ADMIN)
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/order_details/**").hasAnyRole(Role.USER, Role.ADMIN)
 
-
-                        // Thêm quyền truy cập cho Brand
                         .requestMatchers(HttpMethod.GET, "/api/v1/brands").hasAnyRole(Role.USER, Role.ADMIN)
                         .requestMatchers(HttpMethod.POST, "/api/v1/brands").hasRole(Role.ADMIN)
                         .requestMatchers(HttpMethod.PUT, "/api/v1/brands/**").hasRole(Role.ADMIN)
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/brands/**").hasRole(Role.ADMIN)
-                        // Các đường dẫn còn lại bắt buộc phải xác thực
+
+                        // Các đường còn lại yêu cầu xác thực
                         .anyRequest().authenticated()
                 );
+
 
         return http.build();
     }
