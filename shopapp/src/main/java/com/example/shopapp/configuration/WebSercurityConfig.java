@@ -40,7 +40,9 @@ public class WebSercurityConfig {
                                 "/api/v1/users/login",
                                 "/api/v1/products/category/**",
                                 "/api/v1/products/{id}",     // lưu ý: sẽ match nếu dùng đúng định dạng trong controller
-                                "/api/v1/categories/getAll"
+                                "/api/v1/categories/getAll",
+                                "/api/v1/products/search**",
+                                "/api/v1/products/search"
                         ).permitAll()
 
                         // Các route yêu cầu xác thực và phân quyền

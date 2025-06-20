@@ -9,6 +9,7 @@ import com.example.shopapp.models.ProductImage;
 import com.example.shopapp.response.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 public interface IProductService {
@@ -20,4 +21,5 @@ public interface IProductService {
     boolean existsByName(String name);
     ProductImage createProductImage(Long productId, ProductImageDTO productImageDTO) throws DataNotFoundException, InvalidParamExeption;
     Page<ProductResponse> getProductsByCategory(Long categoryId , PageRequest pageRequest);
+    Page<ProductResponse> searchProductsByName(String name, Pageable pageable);
 }

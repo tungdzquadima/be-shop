@@ -30,10 +30,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -224,7 +221,40 @@ public class ProductController {
 
 
 
+    // tìm kếm sản phẩm
+    //http://localhost:8088/api/v1/products/search?name=lenovo&page=0&limit=10
+    @GetMapping("/search")
+    public ResponseEntity<ProductListResponse> searchProductsByName(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "limit", defaultValue = "10") int limit,
+            @RequestParam(name = "name", required = false, defaultValue = "") String name
+    ) {
+        // Validate input
+        if (page < 0 || limit <= 0) {
+            return ResponseEntity.badRequest().body(
+                    ProductListResponse.builder()
+                            .products(Collections.emptyList())
+                            .totalPages(0)
+                            .build()
+            );
+        }
 
+        // Optionally trim the name
+        name = name.trim();
+
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdAt").descending());
+
+        Page<ProductResponse> productPage = productService.searchProductsByName(name, pageRequest);
+        int totalPages = productPage.getTotalPages();
+        List<ProductResponse> products = productPage.getContent();
+
+        return ResponseEntity.ok(
+                ProductListResponse.builder()
+                        .products(products)
+                        .totalPages(totalPages)
+                        .build()
+        );
+    }
 
 
     // tạo bản ghi fake test chức năng

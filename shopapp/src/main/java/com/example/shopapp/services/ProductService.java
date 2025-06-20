@@ -16,10 +16,13 @@ import com.example.shopapp.response.ProductResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -141,7 +144,30 @@ public class ProductService implements IProductService {
 
 
 
+    @Override
+    public Page<ProductResponse> searchProductsByName(String keyword, Pageable pageable) {
+        // Tách keyword thành nhiều từ
+        String[] words = keyword.trim().toLowerCase().split("\\s+");
+        Set<Product> uniqueProducts = new LinkedHashSet<>();
 
+        // Duyệt qua từng từ khóa, gọi truy vấn và thêm vào Set để loại trùng
+        for (String word : words) {
+            Page<Product> partialPage = productRepository.searchByKeyword(word, PageRequest.of(0, 50));
+            uniqueProducts.addAll(partialPage.getContent()); // Lấy tất cả sản phẩm có chứa từ khóa
+        }
+
+        // Convert Set thành List để phân trang thủ công
+        List<Product> filteredList = new ArrayList<>(uniqueProducts);
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), filteredList.size());
+
+        List<ProductResponse> productResponses = filteredList.subList(start, end)
+                .stream()
+                .map(ProductResponse::fromProduct)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(productResponses, pageable, filteredList.size());
+    }
 
 
 
