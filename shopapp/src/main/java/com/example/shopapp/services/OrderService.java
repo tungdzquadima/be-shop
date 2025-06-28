@@ -99,21 +99,22 @@ public class OrderService implements IOrderService{
         return orderRepository.findByUserId(userId);
     }
 
-    // chatgpt cập nhất trạng thái
+    //  cập nhất trạng thái
     @Override
-    public Order updateOrderStatus(long id, String status) throws DataNotFoundException{
-        // Tìm đơn hàng theo id
-        Optional<Order> orderOptional = orderRepository.findById(id);
-        if (orderOptional.isEmpty()) {
-            throw new DataNotFoundException("Không tìm thấy đơn hàng với ID: " + id);
+    public Order updateOrderStatus(long orderId, String status) throws Exception {
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+        if (optionalOrder.isEmpty()) {
+            throw new DataNotFoundException("Không tìm thấy đơn hàng với id: " + orderId);
         }
 
-        Order order = orderOptional.get();
-
-        // Cập nhật trạng thái
+        Order order = optionalOrder.get();
         order.setStatus(status);
 
-        // Lưu lại đơn hàng đã cập nhật
+        // Nếu huỷ thì cũng đánh dấu là không active nữa
+        if ("cancelled".equalsIgnoreCase(status)) {
+            order.setActive(false);
+        }
+
         return orderRepository.save(order);
     }
 }

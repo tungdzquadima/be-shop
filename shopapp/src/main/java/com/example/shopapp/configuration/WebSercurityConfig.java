@@ -49,10 +49,11 @@ public class WebSercurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/me").hasAnyRole(Role.ADMIN, Role.USER)
                         .requestMatchers(HttpMethod.POST, "/api/v1/orders/**").hasAnyRole(Role.USER, Role.ADMIN)
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/orders/**").hasRole(Role.ADMIN)
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/orders/**").hasRole(Role.ADMIN)
+                        //.requestMatchers(HttpMethod.PUT, "/api/v1/orders/**").hasRole(Role.ADMIN)
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/**").hasAnyRole(Role.USER, Role.ADMIN)
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders").hasRole(Role.ADMIN)
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/orders/{id}/status").hasRole(Role.ADMIN)
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/orders/cancel/**").hasAnyRole(Role.USER, Role.ADMIN)
 
                         .requestMatchers(HttpMethod.GET, "/api/v1/categories/**").hasAnyRole(Role.USER, Role.ADMIN)
                         .requestMatchers(HttpMethod.POST, "/api/v1/categories/**").hasRole(Role.ADMIN)

@@ -97,6 +97,18 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
+    // update status
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<?> cancelOrder(@PathVariable Long id) {
+        try {
+            Order cancelledOrder = orderService.updateOrderStatus(id, "cancelled");
+            return ResponseEntity.ok(cancelledOrder);
+        } catch (DataNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Lỗi khi hủy đơn hàng: " + e.getMessage());
+        }
+    }
 
     // chatgpt:
     @PatchMapping("/{id}/status")

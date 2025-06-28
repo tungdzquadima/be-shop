@@ -15,5 +15,5 @@ public interface IOrderService {
     void deleteOrder(long id) throws DataNotFoundException;
     List<Order> getOrderFindByUser(long userId);
     List<Order> getAllOrders();
-    Order updateOrderStatus(long id, String status) throws DataNotFoundException;
+    Order updateOrderStatus(long id, String status) throws Exception;
 }
